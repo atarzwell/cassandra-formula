@@ -37,7 +37,7 @@ num_tokens: {{ pillar.cassandra.num_tokens }}
 # the heaviest-loaded existing node.  If there is no load information
 # available, such as is the case with a new cluster, it will pick
 # a random token, which will lead to hot spots.
-initial_token:
+#initial_token:
 
 # See http://wiki.apache.org/cassandra/HintedHandoff
 hinted_handoff_enabled: true
@@ -56,7 +56,7 @@ max_hints_delivery_threads: 2
 # WARNING: Enable this setting only when the whole node's data fits in memory.
 # Defaults to: false
 # populate_io_cache_on_flush: false
-
+batchlog_replay_throttle_in_kb: 1024
 # Authentication backend, implementing IAuthenticator; used to identify users
 # Out of the box, Cassandra provides org.apache.cassandra.auth.{AllowAllAuthenticator,
 # PasswordAuthenticator}.
@@ -65,7 +65,8 @@ max_hints_delivery_threads: 2
 # - PasswordAuthenticator relies on username/password pairs to authenticate
 #   users. It keeps usernames and hashed passwords in system_auth.credentials table.
 #   Please increase system_auth keyspace replication factor if you use this authenticator.
-authenticator: org.apache.cassandra.auth.AllowAllAuthenticator
+authenticator: AllowAllAuthenticator
+    
 
 # Authorization backend, implementing IAuthorizer; used to limit access/provide permissions
 # Out of the box, Cassandra provides org.apache.cassandra.auth.{AllowAllAuthorizer,
@@ -74,7 +75,7 @@ authenticator: org.apache.cassandra.auth.AllowAllAuthenticator
 # - AllowAllAuthorizer allows any action to any user - set it to disable authorization.
 # - CassandraAuthorizer stores permissions in system_auth.permissions table. Please
 #   increase system_auth keyspace replication factor if you use this authorizer.
-authorizer: org.apache.cassandra.auth.AllowAllAuthorizer
+authorizer: AllowAllAuthorizer
 
 # Validity period for permissions cache (fetching permissions can be an
 # expensive operation depending on the authorizer, CassandraAuthorizer is
@@ -185,7 +186,7 @@ row_cache_save_period: 0
 # that implements org.apache.cassandra.cache.IRowCacheProvider.
 #
 # Defaults to SerializingCacheProvider
-row_cache_provider: SerializingCacheProvider
+#row_cache_provider: SerializingCacheProvider
 
 # saved caches
 saved_caches_directory: {{ pillar.cassandra.saved_caches_directory }}
@@ -241,7 +242,7 @@ seed_provider:
 # it is most effective under light to moderate load, or read-heavy
 # workloads; under truly massive write load, it will often be too
 # little, too late.
-flush_largest_memtables_at: 0.75
+#flush_largest_memtables_at: 0.75
 
 # emergency pressure valve #2: the first time heap usage after a full
 # (CMS) garbage collection is above this fraction of the max,
@@ -252,8 +253,8 @@ flush_largest_memtables_at: 0.75
 #
 # Set to 1.0 to disable.  Setting this lower than
 # CMSInitiatingOccupancyFraction is not likely to be useful.
-reduce_cache_sizes_at: 0.85
-reduce_cache_capacity_to: 0.6
+#reduce_cache_sizes_at: 0.85
+#reduce_cache_capacity_to: 0.6
 
 # For workloads with more data than can fit in memory, Cassandra's
 # bottleneck will be reads that need to fetch data from
@@ -414,7 +415,7 @@ thrift_framed_transport_size_in_mb: 15
 
 # The max length of a thrift message, including all fields and
 # internal thrift overhead.
-thrift_max_message_length_in_mb: 16
+#thrift_max_message_length_in_mb: 16
 
 # Set to true to have Cassandra create a hard link to each sstable
 # flushed or streamed locally in a backups/ subdirectory of the
@@ -442,6 +443,9 @@ auto_snapshot: true
 # the index data is read for each access, so you don't want to generate
 # that wastefully either.
 column_index_size_in_kb: 64
+
+tombstone_warn_threshold: 1000
+tombstone_failure_threshold: 100000
 
 # Size limit for rows being compacted in memory.  Larger rows will spill
 # over to disk and use a slower two-pass compaction process.  A message
@@ -636,7 +640,7 @@ request_scheduler: org.apache.cassandra.scheduler.NoScheduler
 # offs.  This value is not often changed, however if you have many
 # very small rows (many to an OS page), then increasing this will
 # often lower memory usage without a impact on performance.
-index_interval: 128
+#index_interval: 128
 
 # Enable or disable inter-node encryption
 # Default settings are TLS v1, RSA 1024-bit keys (it is imperative that
@@ -691,4 +695,6 @@ internode_compression: all
 # Disabling it will result in larger (but fewer) network packets being sent,
 # reducing overhead from the TCP protocol itself, at the cost of increasing
 # latency if you block for cross-datacenter responses.
-inter_dc_tcp_nodelay: true
+inter_dc_tcp_nodelay: false
+
+preheat_kernel_page_cache: false
