@@ -8,7 +8,7 @@ include:
 # Depends on: JDK6
 ##
 
-cassandra12:
+cassandra20:
   pkg:
     - installed 
     {% if salt['pillar.get']('cassandra:version', '') %}
@@ -31,7 +31,7 @@ cassandra12:
     - mode: 644
     - template: jinja
     - require:
-      - pkg: cassandra12
+      - pkg: cassandra20
 
 /etc/cassandra/conf/cassandra-env.sh:
   file:
@@ -42,7 +42,7 @@ cassandra12:
     - mode: 644
     - template: jinja
     - require:
-      - pkg: cassandra12
+      - pkg: cassandra20
 
 {{ pillar.cassandra.data_file_directory }}:
   file:
@@ -56,7 +56,7 @@ cassandra12:
       - group
       - mode
     - require:
-      - pkg: cassandra12
+      - pkg: cassandra20
 
 {{ pillar.cassandra.commitlog_directory }}:
   file:
@@ -70,7 +70,7 @@ cassandra12:
       - group
       - mode
     - require:
-      - pkg: cassandra12
+      - pkg: cassandra20
 
 {{ pillar.cassandra.saved_caches_directory }}:
   file:
@@ -84,7 +84,7 @@ cassandra12:
       - group
       - mode
     - require:
-      - pkg: cassandra12
+      - pkg: cassandra20
 
 ##
 # Cassandra service management
@@ -96,7 +96,7 @@ cassandra:
   service:
     - running
     - require: 
-      - pkg: cassandra12
+      - pkg: cassandra20
       - file: /etc/cassandra/conf/cassandra.yaml
       - file: /etc/cassandra/conf/cassandra-env.sh
       - file: {{ pillar.cassandra.data_file_directory }}
