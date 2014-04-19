@@ -44,6 +44,20 @@ cassandra20:
     - require:
       - pkg: cassandra20
 
+/var/log/cassandra:
+  file: 
+    - directory
+    - user: cassandra
+    - group: cassandra
+    - mode: 755
+    - makedirs: true
+    - recurse:
+      - user
+      - group
+      - mode
+    - requires:
+      -pkg: cassandra20
+
 {{ pillar.cassandra.data_file_directory }}:
   file:
     - directory
