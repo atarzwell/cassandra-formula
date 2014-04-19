@@ -1,5 +1,5 @@
 # Grab the private IPs of all seed nodes
-{% set seeds=salt['mine.get']('G@stack_id:' ~ grains.stack_id ~ ' and G@roles:cassandra.seed', 'grains.items', 'compound').values() %}
+{% set seeds=salt['mine.get']('G@roles:cassandra.seed', 'grains.items', 'compound').values() %}
 
 # Cassandra storage config YAML
 
